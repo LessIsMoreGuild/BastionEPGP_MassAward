@@ -16,9 +16,9 @@ function award_ep()
 end
 
 
-BastionEPGP_MassAward:RegisterChatCommand("mass", "MySlashProcessorFunc")
+BastionEPGP_MassAward:RegisterChatCommand("mass", "massawardFunc")
 
-function BastionEPGP_MassAward:MySlashProcessorFunc(input)
+function BastionEPGP_MassAward:massawardFunc(input)
   award_table = {}
   local container = GUI:Create("Window")
   container:SetTitle("BastionEPGP reward ep")
@@ -47,6 +47,11 @@ function BastionEPGP_MassAward:MySlashProcessorFunc(input)
   award:SetCallback("OnClick", function() award_ep() end)
   container:AddChild(award)
 
+  local desc = GUI:Create("Label")
+  desc:SetText(" Currently selected: "..tostring(0))
+  desc:SetFullWidth(true)
+  container:AddChild(desc)
+
   scrollcontainer = GUI:Create("InlineGroup") -- "InlineGroup" is also good
   scrollcontainer:SetFullWidth(true)
   scrollcontainer:SetFullHeight(true) -- probably?
@@ -64,16 +69,17 @@ function BastionEPGP_MassAward:MySlashProcessorFunc(input)
   for k,v in pairs(members) do
     local ep = bepgp:get_ep(v.name,v.onote) or 0
     if ep > 0 then
-        --local gp = bepgp:get_gp(v.name,v.onote) or bepgp.VARS.basegp
-        --local pr = ep/gp
-        --local eClass, class, hexclass = bepgp:getClassData(v.class)
-        --local color = RAID_CLASS_COLORS[eClass]
-        --local armor_class = armor_text[class_to_armor[eClass]]
-        --for i = 1, 10, 1 do
         local cb = GUI:Create("CheckBox")
         cb:SetLabel(v.name)
         cb:SetCallback("OnValueChanged", function(widget,callback,value)
               award_table[v.name] = value
+              selection_count = 0
+              for name, _ in pairs(award_table) do
+                if award_table[name] then
+                   selection_count = selection_count + 1
+                end
+              end
+              desc:SetText(" Currently selected: "..tostring(selection_count))
         end)
         scroll:AddChild(cb)
         --end
