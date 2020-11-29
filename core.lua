@@ -4,7 +4,7 @@ local C = LibStub("LibCrayon-3.0")
 local ST = LibStub("ScrollingTable")
 
 local bepgp = BastionEPGP
-ep_store = 50
+ep_store = 100
 
 function award_ep()
    for name, _ in pairs(award_table) do
